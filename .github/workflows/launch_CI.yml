@@ -16,15 +16,16 @@ jobs:
       STATUSES_URL: ${{ github.event_name == 'pull_request' && github.event.pull_request.statuses_url || '' }}
 
     steps:
-      run: |
-        if [ -n "${GITHUB_TOKEN}" ] && [ -n "${STATUSES_URL}" ]; then
-          curl -f -s --show-error -X POST \
-            --url "${STATUSES_URL}" \
-            -H 'accept: application/vnd.github.v3+json' \
-            -H "authorization: Bearer ${GITHUB_TOKEN}" \
-            -H 'content-type: application/json' \
-            -d "{ \"state\": \"pending\",
-              \"target_url\": \"https://${GITHUB_DOMAIN:-github.com}/andrewhughes101/external_repo/actions/runs/${GITHUB_RUN_ID}\",
-              \"description\": \"Run the CI builds\", \"context\": \"Launch CI\"
-                }"
-        fi
+      - name: Add pending status
+        run: |
+          if [ -n "${GITHUB_TOKEN}" ] && [ -n "${STATUSES_URL}" ]; then
+            curl -f -s --show-error -X POST \
+              --url "${STATUSES_URL}" \
+              -H 'accept: application/vnd.github.v3+json' \
+              -H "authorization: Bearer ${GITHUB_TOKEN}" \
+              -H 'content-type: application/json' \
+              -d "{ \"state\": \"pending\",
+                \"target_url\": \"https://${GITHUB_DOMAIN:-github.com}/andrewhughes101/external_repo/actions/runs/${GITHUB_RUN_ID}\",
+                \"description\": \"Waiting to launch CI pipeline\", \"context\": \"Launch CI\"
+                  }"
+          fi

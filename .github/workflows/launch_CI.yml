@@ -9,8 +9,10 @@ jobs:
 
     permissions:
       id-token: write
+      checks: write
       contents: read
       statuses: write
+      pull-requests: write
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       STATUSES_URL: ${{ github.event_name == 'pull_request' && github.event.pull_request.statuses_url || '' }}
